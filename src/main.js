@@ -4,11 +4,14 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 const form = document.querySelector('.form');
 const userQuery = document.querySelector("input[name='search-text']");
-
+const loadMoreBtn = document.querySelector('.load-more');
+let userQueryTrim = '';
+let userPage = 1;
 form.addEventListener('submit', e => {
   e.preventDefault();
+  userQueryTrim = userQuery.value.trim();
+  renderFunction.hideLoadMoreButton();
   renderFunction.clearGallery();
-  const userQueryTrim = userQuery.value.trim();
   if (!userQueryTrim) {
     iziToast.warning({
       close: false,
@@ -27,6 +30,51 @@ form.addEventListener('submit', e => {
     .then(images => {
       if (images && images.length > 0) {
         renderFunction.createGallery(images);
+        renderFunction.showLoadMoreButton();
+      }
+    })
+    .catch(error => {
+      iziToast.error({
+        message: 'Something went wrong. Please try again later.',
+        position: 'topRight',
+      });
+      console.error(error);
+    })
+    .finally(() => {
+      renderFunction.hideLoader();
+    });
+});
+loadMoreBtn.addEventListener('click', () => {
+  renderFunction.hideLoadMoreButton();
+  renderFunction.showLoader();
+  let limit = 15;
+  const totalPage = Math.ceil(200 / limit);
+  if (userPage > totalPage) {
+    renderFunction.hideLoader();
+    return iziToast.error({
+      close: false,
+      progressBar: false,
+      timeout: 3000,
+      pauseOnHover: false,
+      position: 'topRight',
+      message: "We're sorry, but you've reached the end of search results.",
+    });
+  }
+  userPage += 1;
+  pixabayApi
+    .getImagesByQuery(userQueryTrim, userPage)
+    .then(images => {
+      if (images && images.length > 0) {
+        renderFunction.createGallery(images, userPage);
+        const firstCard = document.querySelector('.gallery-item');
+        if (firstCard) {
+          const cardHeight = firstCard.getBoundingClientRect().height;
+          window.scrollBy({
+            top: cardHeight * 2,
+            behavior: 'smooth',
+          });
+        }
+        renderFunction.showLoadMoreButton();
       }
     })
     .catch(error => {

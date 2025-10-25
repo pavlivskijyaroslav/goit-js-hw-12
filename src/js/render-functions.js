@@ -2,6 +2,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 const userList = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
+// const loaderBottom = document.querySelector('.loader-bottom');
+const loadMore = document.querySelector('.load-more');
 
 const lightbox = new SimpleLightbox('.gallery a', {
   captions: true,
@@ -50,4 +52,11 @@ export function showLoader() {
 }
 export function hideLoader() {
   loader.style.display = 'none';
+}
+
+export function showLoadMoreButton() {
+  loadMore.style.display = 'block';
+}
+export function hideLoadMoreButton() {
+  loadMore.style.display = 'none';
 }

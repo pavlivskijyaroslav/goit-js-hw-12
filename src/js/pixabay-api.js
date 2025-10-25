@@ -2,7 +2,7 @@ import axios from 'axios';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 // import * as renderFunction from './render-functions.js';
-function getImagesByQuery(query) {
+function getImagesByQuery(query, page) {
   // renderFunction.showLoader();
   return axios
     .get('https://pixabay.com/api/', {
@@ -12,7 +12,8 @@ function getImagesByQuery(query) {
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
-        per_page: 21,
+        per_page: 15,
+        page: page,
       },
     })
     .then(response => {
