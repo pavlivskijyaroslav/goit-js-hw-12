@@ -9,7 +9,7 @@ const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
 });
-export function createGallery(images) {
+export function createGallery(images, page) {
   const markup = images
     .map(images => {
       return `
@@ -37,7 +37,11 @@ export function createGallery(images) {
 `;
     })
     .join('');
-  userList.insertAdjacentHTML('beforeend', markup);
+  if (page === 1) {
+    userList.innerHTML = markup;
+  } else {
+    userList.insertAdjacentHTML('beforeend', markup);
+  }
 
   lightbox.refresh();
 }
