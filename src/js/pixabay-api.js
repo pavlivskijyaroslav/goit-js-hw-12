@@ -15,32 +15,12 @@ async function getImagesByQuery(query, page) {
         page: page,
       },
     });
-    const images = response.data.hits;
-    if (!images || images.length === 0) {
-      iziToast.error({
-        close: false,
-        progressBar: false,
-        timeout: 3000,
-        pauseOnHover: false,
-        position: 'topRight',
-        color: 'red',
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-      });
-      return [];
-    }
-    return images;
+    return {
+      hits: response.data.hits,
+      totalHits: response.data.totalHits,
+    };
   } catch (error) {
     console.log(error);
-    iziToast.error({
-      close: false,
-      progressBar: false,
-      timeout: 3000,
-      pauseOnHover: false,
-      position: 'topRight',
-      message: 'Something went wrong. Please try again later.',
-    });
-    return [];
   }
 }
 export { getImagesByQuery };
